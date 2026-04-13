@@ -2,141 +2,128 @@
 # PROJECT DEFINITION TEMPLATE
 
 ## 1. PROJECT TITLE
-[Give your project a name]
-
-Example: "Multi-Paper Methodology Comparison Tool"
+AI-Powered Natural Language Database Query & Retrieval Agent
 
 ## 2. THE PROBLEM
-What research problem are you solving?
-
-[Be specific! What's painful in your current workflow?]
-
-Example: "I need to compare how different papers approach sentiment 
-analysis, but manually reading 20 papers and extracting their methods 
-takes days."
+Business users and analysts often need to retrieve data from databases but must rely on SQL knowledge or engineering support. This slows down decision-making and creates dependency bottlenecks. Writing correct SQL queries can also be error-prone for non-technical users.
 
 ## 3. YOUR SOLUTION
-How will your agent solve this problem?
-
-[Describe the agent's behavior at a high level]
-
-Example: "My agent will: (1) search for papers on a topic, (2) extract 
-methodology sections, (3) identify key techniques, (4) create a 
-comparison table, (5) highlight novel approaches."
+My agent will allow users to ask questions in natural language and automatically retrieve structured results from a database. It will:
+1. Interpret user questions in natural language
+2. Convert them into safe and optimized SQL queries
+3. Execute queries against a connected database
+4. Validate and sanitize results
+5. Return structured outputs (tables, summaries, or charts)
+6. Optionally explain how the result was generated
 
 ## 4. USER WORKFLOW
-How will someone use your agent?
-
-[Describe the user interaction]
-
-Example:
-- User inputs: Research topic, number of papers to analyze
-- Agent does: Search, extract, analyze, compare
-- User receives: Comparison table + insights document
+- User inputs: a question like "What were total sales last month by region?"
+- Agent does:
+  - Understands intent and identifies relevant tables/columns
+  - Generates SQL query
+  - Runs query on database
+  - Processes results into readable format
+- User receives:
+  - Table of results (Markdown/CSV)
+  - Optional natural language summary
+  - Optional visualization (bar chart, trend line)
 
 ## 5. COMPONENTS
-Which techniques from the course will you use?
-
-[Check all that apply, explain how]
-
-☐ CO-STAR prompting - [How will you use it?]
-☐ Structured outputs (JSON/XML) - [How will you use it?]
-☐ Chain-of-thought - [How will you use it?]
-☐ Model selection - [Which models for which tasks?]
-☐ MCP/Tool use - [Which tools?]
-☐ Multi-step workflow - [Describe the flow]
-☐ Other: [What else?]
+☑ CO-STAR prompting - used to structure SQL generation prompts (context, role, constraints, output format)  
+☑ Structured outputs (JSON) - enforce SQL + explanation format  
+☑ Chain-of-thought (internal) - used for schema reasoning and query planning  
+☑ Model selection - stronger model for SQL generation, lighter model for formatting results  
+☑ MCP/Tool use - database connector (PostgreSQL/MySQL/SQLite)  
+☑ Multi-step workflow - interpret → generate SQL → execute → format → summarize  
+☑ Other: query validation layer to prevent unsafe SQL (e.g. DROP, DELETE)  
 
 ## 6. SUCCESS CRITERIA
-How will you know if your project succeeded?
-
-[Define measurable success]
-
-Example:
-- Functional: Correctly extracts methods from 80%+ of papers
-- Useful: Saves me at least 4 hours on my next literature review
-- Quality: Comparison table is accurate and readable
-- Demo-able: Can show end-to-end workflow in 5 minutes
+- Correct SQL generated for ≥85% of natural language queries  
+- Executes queries without errors in ≥90% of cases  
+- Returns results in <3 seconds for typical queries  
+- Users can retrieve required data without writing SQL  
+- Reduces analyst dependency for basic reporting tasks by 60%  
 
 ## 7. SCOPE
-What's IN scope and OUT of scope?
 
 IN SCOPE (Must have):
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
+- Natural language to SQL conversion
+- Read-only database queries (SELECT only)
+- Query execution and result formatting
+- Basic schema awareness (tables, columns)
 
-OUT OF SCOPE (Nice to have, but not now):
-- [Feature that would be cool but not essential]
-- [Feature you might add later]
+OUT OF SCOPE (Nice to have):
+- Writing/modifying database records (INSERT/UPDATE/DELETE)
+- Complex ETL pipelines
+- Real-time streaming analytics
+- Full BI dashboard replacement
 
 ## 8. DATA SOURCES
-What data will your agent work with?
-
-[Where does the data come from?]
-
-Example: arXiv papers (via search API), user-uploaded PDFs, etc.
+- Internal SQL database (PostgreSQL / MySQL / SQLite)
+- Sample business dataset (sales, customers, products, transactions)
+- Database schema metadata (tables, relationships)
 
 ## 9. TECH STACK
-What tools/libraries will you use?
-
-[List the technical components]
-
-Example:
-- LLM: Claude Sonnet (API) or Llama 3.1 (local)
-- Tools: arXiv API, PyPDF for parsing, pandas for tables
-- MCP: brave-search server, filesystem server
-- Output: Markdown reports, CSV tables
+- LLM: GPT-4.1 / Claude Sonnet for SQL generation and reasoning
+- Database: PostgreSQL or SQLite (for prototype)
+- Python libraries:
+  - sqlalchemy (DB connection)
+  - pandas (result handling)
+  - sqlite3 / psycopg2 (execution layer)
+- Validation:
+  - SQL parsing / sanitization tools
+- Output:
+  - JSON structured responses
+  - Markdown tables
+  - Optional charts (matplotlib / plotly)
 
 ## 10. TIMELINE
-What's your week-by-week plan?
 
-Week 1 (This week):
-  - [Task 1]
-  - [Task 2]
+Week 1:
+- Set up database schema and sample dataset
+- Build basic DB connection layer
 
-Week 2-3:
-  - [Task 3]
-  - [Task 4]
+Week 2:
+- Implement natural language → SQL prompt pipeline
+- Define structured output format (JSON)
 
-Week 4 (Project Insight I):
-  - Demo: [What will you show?]
-  - Get feedback
+Week 3:
+- Execute SQL safely and return results
+- Add query validation (SELECT-only enforcement)
 
-Week 5-6:
-  - [Refinements based on feedback]
+Week 4:
+- Improve SQL accuracy using schema-aware prompting
+- Add error handling and retries
 
-Week 7 (Project Insight II):
-  - Finalize scope
+Week 5–6:
+- Optimize performance and edge cases
+- Add result summarization layer
 
-Week 8-10:
-  - [Final implementation]
-  - [Testing]
-  - [Documentation]
+Week 7:
+- Test with real user-style queries
+- Improve robustness and schema understanding
 
-Week 10 (Final Presentation):
-  - Demo complete agent
+Week 8–10:
+- Final integration, testing, documentation
+- Prepare demo and user walkthrough
 
 ## 11. RISKS & MITIGATION
-What could go wrong?
 
-Risk 1: [What could go wrong?]
-  Mitigation: [How will you handle it?]
+Risk 1: Incorrect SQL generation
+  Mitigation: schema injection into prompts + validation layer
 
-Risk 2: [What could go wrong?]
-  Mitigation: [How will you handle it?]
+Risk 2: Unsafe queries (data modification)
+  Mitigation: enforce read-only SQL parser and whitelist SELECT statements
 
-Example:
-Risk: API rate limits on paper searches
-  Mitigation: Implement caching, use local models as fallback
+Risk 3: Poor performance on large datasets
+  Mitigation: query optimization and limiting result sets
+
+Risk 4: Hallucinated column/table names
+  Mitigation: strict schema context injection
 
 ## 12. STRETCH GOALS
-What would you add if you had more time?
-
-[Nice-to-have features]
-
-Example:
-- Web UI instead of notebook
-- Support for more paper sources
-- Automated quality checks
-- Export to LaTeX
+- Natural language dashboard builder
+- Automatic chart generation from queries
+- Multi-database support (Postgres + BigQuery)
+- Semantic layer for business metrics (KPIs)
+- Voice-based querying interface

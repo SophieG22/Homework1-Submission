@@ -1,12 +1,12 @@
 {
-  "name": "My Production Template",
-  "use_case": "Describe when you'd use this",
+  "name": "Professional Email Reply Generator",
+  "use_case": "Quickly generate clear, polite, and professional email responses in a corporate environment",
   "parameters": {
-    "context": "\n        # YOUR CONTEXT\n        ",
-    "objective": "\n        # YOUR OBJECTIVE\n        ",
-    "style": "\n        # YOUR STYLE\n        ",
-    "tone": "\n        # YOUR TONE\n        ",
-    "audience": "\n        # YOUR AUDIENCE\n        ",
-    "response_format": "\n        # YOUR FORMAT\n        "
+    "context": "\n        You are a corporate professional writing email responses in a business environment,\n        interacting with HR, managers, and colleagues.\n        ",
+    "objective": "\n        Write a clear and concise email reply that acknowledges the message,\n        responds appropriately, and maintains professionalism.\n        ",
+    "style": "\n        Clear, concise, and structured using natural business language.\n        ",
+    "tone": "\n        Polite, professional, and slightly warm.\n        ",
+    "audience": "\n        HR representatives, managers, or colleagues in a corporate setting.\n        ",
+    "response_format": "\n        A short email (3\u20136 sentences) including:\n        - Greeting\n        - Acknowledgment\n        - Main response or confirmation\n        - Polite closing\n        "
   }
 }

@@ -1,5 +1,5 @@
 # My Agent Architecture
-**Created:** 2026-03-21 23:44:55
+**Created:** 2026-04-12 16:14:55
 
 
 # MY AGENT ARCHITECTURE
@@ -7,153 +7,156 @@
 ## Component Breakdown
 
 ### 1. INPUT HANDLER
-Purpose: [What it does]
-Implementation: [How you'll build it]
+Purpose: Capture and preprocess user natural language queries
+Implementation:
+- Simple CLI or API endpoint (FastAPI)
+- Clean input (strip spaces, basic validation)
+- Optionally detect intent (aggregation, filtering, grouping)
 
 ### 2. CORE WORKFLOW
-Purpose: [What it does]
+Purpose: Convert natural language into database results
+
 Steps:
-  1. [Step 1]
-  2. [Step 2]
-  3. [Step 3]
-  [etc.]
+  1. Receive user query
+  2. Inject database schema into prompt
+  3. Generate SQL query using LLM
+  4. Validate SQL (SELECT-only, schema check)
+  5. Execute SQL query on database
+  6. Format results (table + optional summary)
+  7. Return output to user
 
 ### 3. TOOL LAYER (if applicable)
 Tools needed:
-  - [Tool 1]: [Purpose]
-  - [Tool 2]: [Purpose]
+  - Database Connector (SQLAlchemy / sqlite3): Execute SQL queries
+  - Schema Loader: Retrieve table/column metadata
+  - SQL Validator: Ensure safe queries (block DELETE/UPDATE/DROP)
+  - Pandas: Format query results into tables
 
 ### 4. LLM INTERACTION
 LLM calls needed:
-  Call 1: [Purpose] â†’ [Model] â†’ [Output format]
-  Call 2: [Purpose] â†’ [Model] â†’ [Output format]
-  [etc.]
+
+  Call 1: Natural Language ¡ú SQL generation  
+    ¡ú Model: GPT-4.1 (or equivalent)  
+    ¡ú Output format: JSON  
+    Example:
+    {
+      "sql": "...",
+      "explanation": "..."
+    }
+
+  Call 2: Result summarization (optional)  
+    ¡ú Model: lighter model (GPT-4o-mini or similar)  
+    ¡ú Output format: text summary  
 
 ### 5. OUTPUT GENERATOR
-Output format: [Markdown/JSON/HTML/etc.]
-Structure: [Describe the output]
+Output format: JSON + Markdown
+
+Structure:
+- SQL query used
+- Table result (DataFrame ¡ú Markdown table)
+- Optional summary
+- Optional metadata (execution time, row count)
+
+Example:
+{
+  "query": "...",
+  "sql": "...",
+  "result_table": "...",
+  "summary": "..."
+}
 
 ## Data Flow
 
-[Draw your data flow using ASCII art or describe it]
-
-Example:
-User Input â†’ Search â†’ Filter â†’ Extract â†’ Analyze â†’ Report
+User Input 
+   ¡ý
+Input Handler
+   ¡ý
+Schema Injection
+   ¡ý
+LLM (Generate SQL)
+   ¡ý
+SQL Validation
+   ¡ý
+Database Execution
+   ¡ý
+Result Formatting (pandas)
+   ¡ý
+LLM (Optional Summary)
+   ¡ý
+Final Output
 
 ## File Structure
 
-[Describe your code organization]
-
-Example:
-research_agent/
-  â”œâ”€â”€ main.py
-  â”œâ”€â”€ config.py
-  â”œâ”€â”€ agents/
-  â”‚   â””â”€â”€ paper_analyzer.py
-  â”œâ”€â”€ prompts/
-  â”‚   â””â”€â”€ extraction_prompts.py
-  â””â”€â”€ outputs/
+nl_sql_agent/
+  ©À©¤©¤ main.py
+  ©À©¤©¤ config.py
+  ©À©¤©¤ db/
+  ©¦   ©À©¤©¤ connection.py
+  ©¦   ©¸©¤©¤ schema.py
+  ©À©¤©¤ agents/
+  ©¦   ©¸©¤©¤ sql_agent.py
+  ©À©¤©¤ prompts/
+  ©¦   ©¸©¤©¤ sql_generation_prompt.py
+  ©À©¤©¤ utils/
+  ©¦   ©À©¤©¤ validator.py
+  ©¦   ©¸©¤©¤ formatter.py
+  ©¸©¤©¤ outputs/
 
 ## Key Prompts
 
-[Document your main prompts]
-
 EXTRACTION_PROMPT:
 '''
-[Your CO-STAR prompt for extraction]
+You are a data analyst expert.
+
+Context:
+You are given a database schema and a user question.
+
+Schema:
+{schema}
+
+Task:
+Convert the user's question into a valid SQL query.
+
+Constraints:
+- Only generate SELECT queries
+- Use only tables and columns from the schema
+- Avoid unnecessary complexity
+- Include aggregation if needed (SUM, COUNT, etc.)
+
+Output format (JSON):
+{
+  "sql": "your SQL query",
+  "explanation": "brief explanation"
+}
+
+User Question:
+{user_query}
 '''
 
 ANALYSIS_PROMPT:
 '''
-[Your prompt for analysis]
+You are a business analyst.
+
+Given the following query result:
+{table}
+
+Summarize key insights in 2-3 sentences.
+Focus on trends, comparisons, or anomalies.
 '''
 
 ## Error Handling
 
-[How will you handle errors?]
+1. Input errors:
+   - Empty or unclear query ¡ú return clarification request
 
-1. Input errors: [Strategy]
-2. API failures: [Strategy]
-3. LLM failures: [Strategy]
-4. Partial results: [Strategy]
+2. API failures:
+   - Retry LLM call (max 2 retries)
+   - Fallback to simpler prompt
 
+3. LLM failures:
+   - Validate JSON output
+   - If invalid ¡ú re-prompt with stricter instructions
 
----
-
-## Architecture Review
-
-# Architecture Review & Issue Analysis
-
-## ðŸ”´ CRITICAL ISSUES
-
-### 1. **Complete Lack of Specificity**
-**Problem:** This is a template, not an architecture. Every section uses placeholder text.
-
-**Impact:** 
-- Impossible to validate logic flow
-- Can't identify integration points
-- No way to assess feasibility
-
-**Action Required:**
-- Fill in EVERY bracket with actual implementation details
-- Specify exact tools, models, and data structures
-- Define concrete input/output formats
-
----
-
-### 2. **Missing State Management**
-**Problem:** No mention of how state is tracked between steps.
-
-**Issues:**
-- How do you handle multi-step workflows?
-- Where is intermediate data stored?
-- What happens if a step fails mid-process?
-
-**Add:**
-```
-STATE MANAGEMENT:
-- Session storage: [Redis/Memory/Database]
-- State schema: {step: str, data: dict, status: str}
-- Persistence strategy: [When/how to save]
-```
-
----
-
-### 3. **No LLM Orchestration Strategy**
-**Problem:** Lists "LLM calls" but doesn't explain orchestration.
-
-**Missing:**
-- Sequential vs. parallel execution?
-- How do outputs chain together?
-- Retry logic for failed calls?
-- Token budget management across calls?
-
-**Add:**
-```
-LLM ORCHESTRATION:
-- Execution pattern: [Sequential/Parallel/Hybrid]
-- Output chaining: Call2 uses output from Call1 as {context}
-- Token allocation: Call1 (2K), Call2 (4K), Buffer (1K)
-```
-
----
-
-## ðŸŸ¡ MAJOR GAPS
-
-### 4. **Undefined Input Validation**
-**Problem:** "Input Handler" purpose is blank.
-
-**Risks:**
-- Malformed inputs crash the system
-- Security vulnerabilities (injection attacks)
-- Wasted LLM calls on invalid data
-
-**Should Include:**
-```
-INPUT VALIDATION:
-- Schema: Pydantic model with field types
-- Sanitization: Strip HTML, limit length
-- Rejection criteria: Empty fields, invalid formats
-```
-
----
+4. Partial results:
+   - If SQL runs but result is empty ¡ú return message + possible reasons
+   - If schema mismatch ¡ú suggest corrected columns

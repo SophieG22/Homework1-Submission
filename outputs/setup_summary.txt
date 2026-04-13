@@ -2,8 +2,8 @@
 ✅ Environment Setup Complete!
 
 Configuration:
-  Path: A (Claude API (Cloud))
-  Default Model: claude-sonnet-4-5-20250929
+  Path: C (Hybrid)
+  Default Model: llama3.2:latest
 
 Status:
   ✓ All modules imported
@@ -19,4 +19,4 @@ Files:
   • outputs/path_selection.md (your rationale)
   • src/config.py (path configuration)
 
-Setup completed: 2026-02-04 00:40:05
+Setup completed: 2026-04-02 11:12:51

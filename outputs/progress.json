@@ -1,0 +1,16 @@
+{
+  "notebook_02": {
+    "notebook": "02_llm_basics",
+    "completed_at": "2026-04-02T19:37:55.205582",
+    "path": "C",
+    "model": "llama3.2:latest",
+    "api_calls": 18,
+    "total_cost": 0.0,
+    "total_tokens": 3939,
+    "tasks_completed": {
+      "task_1_custom_system_prompt": true,
+      "task_2_temperature_exploration": true,
+      "task_3_cost_optimization": true
+    }
+  }
+}
